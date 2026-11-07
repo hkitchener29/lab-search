@@ -6,10 +6,10 @@ def number_lines(lines):
 
     >>> number_lines(['Library hours', '', 'Open late'])
     [(1, 'Library hours'), (2, ''), (3, 'Open late')]
-    >>> number_lines([])
+    >>> number_lines([])       
     []
     """
-    pass
+    return list(enumerate(lines, start=1))
 
 
 def matching_lines(lines, query):
@@ -24,7 +24,16 @@ def matching_lines(lines, query):
     >>> matching_lines(['Library hours'], 'pool')
     []
     """
-    pass
+    if query == '':
+        return []
+    numbered = number_lines(lines)
+    lowered_query = query.lower()
+    matches = []
+    for number, text in numbered:
+        if lowered_query in text.lower():
+            matches.append((number, text))
+    return matches
+
 
 
 def group_matches(documents, query):
@@ -35,7 +44,7 @@ def group_matches(documents, query):
     >>> group_matches([], 'library')
     []
     """
-    pass
+    return [matching_lines(doc, query) for doc in documents]
 
 
 def flatten_matches(names, groups):
@@ -48,7 +57,11 @@ def flatten_matches(names, groups):
     >>> flatten_matches([], [])
     []
     """
-    pass
+    flattened = []
+    for name, group in zip(names, groups):
+        for line_number, text in group:
+            flattened.append((name, line_number, text))
+    return flattened
 
 
 def match_counts(names, groups):
@@ -61,4 +74,4 @@ def match_counts(names, groups):
     >>> match_counts([], [])
     {}
     """
-    pass
+    return {name: len(group) for name, group in zip(names, groups)}
